@@ -39,7 +39,7 @@ let memo = {
 
 function vectorFunction(vec) {
     let x = vec[0];
-    let y = vec[1] - 4;
+    let y = vec[1];
     // if(memo[x + "," + y]) return memo[x + "," + y];
     //x |-> sin(x) + y
     //y |-> sin(y) + x
@@ -211,5 +211,29 @@ function draw() {
 function mousePressed(evt) {
     let cartesianX = (((evt.clientX - horizOffset) / (NUM_SQUARES * WIDTH_OF_SQUARE)) * NUM_SQUARES - Math.abs(INTERVAL[0]));
     let cartesianY = -1 * (((evt.clientY - vertOffset) / (NUM_SQUARES * WIDTH_OF_SQUARE)) * NUM_SQUARES - Math.abs(INTERVAL[0]));
-    console.log([cartesianX, cartesianY], vectorFunction([cartesianX, cartesianY]))
+
+    const NUDGE_SIZE = 0.01;
+    let valueJustToLeft = vectorFunction([cartesianX - NUDGE_SIZE, cartesianY]);
+    let valueJustToRight = vectorFunction([cartesianX + NUDGE_SIZE, cartesianY]);
+    let valueJustAbove = vectorFunction([cartesianX, cartesianY + NUDGE_SIZE]);
+    let valueJustBelow = vectorFunction([cartesianX, cartesianY - NUDGE_SIZE]);
+    console.log(cartesianY - NUDGE_SIZE, "grgwer")
+
+    let xpartialX = (valueJustToRight[0] - valueJustToLeft[0]) / (NUDGE_SIZE * 2);
+    console.log("XPX", xpartialX)
+    let ypartialY = (valueJustAbove[1] - valueJustBelow[1]) / (NUDGE_SIZE * 2);
+    console.log("YPY", ypartialY)
+
+    let divergence = xpartialX + ypartialY;
+
+    let xpartialY = (valueJustToRight[1] - valueJustToLeft[1]) / NUDGE_SIZE;
+    let ypartialX = (valueJustAbove[0] - valueJustBelow[0]) / NUDGE_SIZE;
+
+    console.log(valueJustToLeft, valueJustToRight, valueJustAbove, valueJustBelow);
+    console.log((valueJustToRight[1] - valueJustToLeft[1]) / (NUDGE_SIZE * 2))
+
+    let curl = xpartialY - ypartialX;
+
+    console.log(cartesianX, cartesianY);
+    alert("Local Divergence: " + divergence + "\n" + "Local Curl: " + curl);
 }
