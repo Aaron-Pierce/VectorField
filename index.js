@@ -190,22 +190,14 @@ function draw() {
     fill(255);
 
     for (let boid of boids) {
-        if (boid.dead){
-            continue;
-        };
         let pos = cartesianToScreen([boid.x, boid.y]);
         let vecAtPos = vectorFunction([boid.x, boid.y])
 
         if (pos[0] < horizOffset || pos[1] < vertOffset || pos[0] > horizOffset + NUM_SQUARES * WIDTH_OF_SQUARE || pos[1] > vertOffset + NUM_SQUARES * WIDTH_OF_SQUARE) {
-            boid.dead = true;
-            boids.push({
-                x: Math.random() * NUM_SQUARES - Math.abs(INTERVAL[0]),
-                y: Math.random() * NUM_SQUARES - Math.abs(INTERVAL[0])
-            })
+                boid.x = Math.random() * NUM_SQUARES - Math.abs(INTERVAL[0]),
+                boid.y = Math.random() * NUM_SQUARES - Math.abs(INTERVAL[0])
             continue;
         }
-
-        boid.lastPos = [boid.x + 0, boid.y + 0];
         boid.x -= vecAtPos[0] / 200;
         boid.y -= vecAtPos[1] / 200;
 
