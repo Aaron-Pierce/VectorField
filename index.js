@@ -209,7 +209,7 @@ function draw() {
 }
 
 
-function computeCurl(cartesianX, cartesianY){
+function computeCurlAndDivergence(cartesianX, cartesianY){
     const NUDGE_SIZE = 0.001;
     let valueJustToLeft = vectorFunction([cartesianX - NUDGE_SIZE, cartesianY]);
     let valueJustToRight = vectorFunction([cartesianX + NUDGE_SIZE, cartesianY]);
@@ -217,11 +217,21 @@ function computeCurl(cartesianX, cartesianY){
     let valueJustBelow = vectorFunction([cartesianX, cartesianY - NUDGE_SIZE]);
     console.log(valueJustToRight[1] - valueJustToLeft[1]);
 
+
+
+    let xpartialX = (valueJustToRight[0] - valueJustToLeft[0]) / (NUDGE_SIZE * 2);
+    let ypartialY = (valueJustAbove[1] - valueJustBelow[1]) / (NUDGE_SIZE * 2);
+
+    let divergence = xpartialX + ypartialY;
+
     let ypartialX = (valueJustToRight[1] - valueJustToLeft[1]) / (2*NUDGE_SIZE);
     let xpartialY = (valueJustAbove[0] - valueJustBelow[0]) / (2*NUDGE_SIZE);
 
     let curl = ypartialX - xpartialY;
-    return curl;
+    return {
+        "curl": curl,
+        "divergence": divergence
+    };
 }
 
 function mousePressed(evt) {
@@ -231,12 +241,9 @@ function mousePressed(evt) {
     console.log(cartesianX, cartesianY, vectorFunction([cartesianX, cartesianY]));
 
 
-    let xpartialX = (valueJustToRight[0] - valueJustToLeft[0]) / (NUDGE_SIZE * 2);
-    let ypartialY = (valueJustAbove[1] - valueJustBelow[1]) / (NUDGE_SIZE * 2);
 
-    let divergence = xpartialX + ypartialY;
-
-    let curl = computeCurl(cartesianX, cartesianY)
+    let curl = computeCurlAndDivergence(cartesianX, cartesianY).curl;
+    let divergence = computeCurlAndDivergence(cartesianX, cartesianY).divergence;
 
     alert("Local Divergence: " + divergence + "\n" + "Local Curl: " + curl);
 }
